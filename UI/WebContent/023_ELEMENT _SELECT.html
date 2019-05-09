@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>Document</title>
+		<script type="text/javascript">
+			function myclick(){
+				//var sel = document.getElementById("name");
+				//alert(sel.options[sel.selectedIndex].value);
+				 var obj = document.getElementsByName("mySelect")[0];
+				 alert(obj.options[obj.selectedIndex].value); 
+				 
+				
+			}
+		</script>
+	</head>
+	<body>
+		<select name="mySelect" id="name" >
+			<option value="1" >111</option>			
+			<option value="2" >222</option>			
+			<option value="3" >333</option>			
+		</select>
+		
+		<input type="button" value="클릭" onclick="myclick()"/>
+	</body>
+</html>

@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>Document</title>
+		<script type="text/javascript">
+			function myclick(){ 
+			var objS = document.getElementById("myselect");
+			var dan = objS.options[objS.selectedIndex].value;
+			
+			var text = "";
+			for(var i = 1; i <= 9; i++){
+			text += dan + "*"+ i + "=" + dan*i + "\n"; //\n해야 줄바꿈 한다
+			
+			}
+		
+			var obj = document.getElementById("mytextarea");
+			obj.value = text;
+				
+			}
+			
+		</script>
+	</head>
+	<body>
+		<table border="1">
+			<tr>
+				<td>
+					<select onchange="myclick()" id = "myselect">
+						<option value="2">2단</option>
+						<option value="3">3단</option>
+						<option value="4">4단</option>
+						<option value="5">5단</option>
+						<option value="6">6단</option>
+						<option value="7">7단</option>
+						<option value="8">8단</option>
+						<option value="9">9단</option>
+					</select>
+				</td>
+				<td>
+					<input type="button" value="클릭" onclick="myclick()"/>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2">
+					<textarea id= "mytextarea" rows="10" cols="11"></textarea>
+				</td>
+			</tr>
+		</table>
+	</body>
+</html>

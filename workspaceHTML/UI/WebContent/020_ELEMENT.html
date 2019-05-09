@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>Document</title><!-- document는 body랑 같음 .value이런식으로 하면 메소드
+								같은 변수명을 호출 한다 -->
+		<script type="text/javascript">
+			function init(){
+				alert(document.getElementById("myname").value) 
+			}
+			function myclick(){
+				alert("good job!")
+			}
+		</script>
+	</head>
+	<body onload="init()"><!-- "on" 이벤트.. 메소드랑 같은 개념 -->
+		<form action="http://www.daum.net">
+			이름: <input id="myname" name="myname" type="text" value="홍길동"></br>
+			<input type="button" value="클릭" onclick="myclick()">
+			<input type="submit">
+		</form>
+	</body>
+</html>

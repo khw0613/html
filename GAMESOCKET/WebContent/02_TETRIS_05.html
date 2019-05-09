@@ -1,0 +1,769 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script>
+	var arr2d_block		= new Array();
+	var arr2d_stack		= new Array();
+	var arr2d_displ		= new Array();
+
+	var canvas;
+	var ctx;
+	
+	var arr_ctx_other		= new Array();
+
+	
+	var webSocket ;
+	
+	window.onload = function() {
+		init_arr();
+		
+		canvas = document.getElementById("canvas");
+		if (canvas == null || canvas.getContext == null) return;
+		ctx = canvas.getContext("2d");
+		
+		var canvas_others = document.getElementsByName("canvas_other");
+		
+		for(var i=0;i<canvas_others.length;i++){
+			var canvas_other = canvas_others[i];
+			if (canvas_other == null || canvas_other.getContext == null) return;
+			var ctx_other = canvas_other.getContext("2d");
+			arr_ctx_other.push(ctx_other);			
+		}
+		
+
+		
+		draw();
+	}
+	
+	function init_arr(){
+
+		for(var i=0;i<20;i++){
+			var row_block = new Array();
+			var row_stock = new Array();
+			var row_displ = new Array();
+			for(var j=0;j<10;j++){
+				row_block.push(0);
+				row_stock.push(0);
+				row_displ.push(0);
+			}
+			arr2d_block.push(row_block);
+			arr2d_stack.push(row_stock);
+			arr2d_displ.push(row_displ);
+		}
+		
+		arr2d_stack[19][0] = 2;
+		arr2d_stack[19][1] = 2;
+		arr2d_stack[19][2] = 2;
+		arr2d_stack[19][3] = 2;
+		
+		arr2d_stack[19][4] = 2;
+		arr2d_stack[19][5] = 2;
+		arr2d_stack[19][6] = 2;
+		arr2d_stack[19][7] = 2;
+		
+
+		
+		//console.log(arr2d_block);
+		//console.log(arr2d_stack);
+		//console.log(arr2d_displ);
+		
+		
+ 		
+		
+	}
+	
+	var block_type		= 7;
+	var block_status	= 1;
+	var block_i			= 1;
+	var block_j			= 4;
+	
+	var colors = ["gray","yellow","blue","pink","red",
+	              "orange","green","purple"];
+	
+	function draw() {
+		console.log(webSocket);
+		if(webSocket != undefined){
+			send();
+		}
+		
+		for(var i=0;i<20;i++){
+			for(var j=0;j<10;j++){
+				var index_color = arr2d_displ[i][j];
+				ctx.fillStyle = colors[index_color]; 
+				ctx.fillRect(20*j, 20*i, 19, 19);
+			}
+		}
+	}
+	
+	function draw_other(info) {
+		var arr_info = info.split(":");
+		var name_other	= arr_info[0];
+		var disp_other	= arr_info[1];
+		var cmd_other	= arr_info[2];
+		if(cmd_other == "read"){
+			return;
+		} else if(cmd_other == "star"){
+			flag_move = true;
+			return;
+		} else if(cmd_other == "vict"){
+			alert(name_other+"가 이겼습니다.");
+			flag_move = false;
+			return;
+		}
+		
+		var obj_div_others = document.getElementsByName("div_other");
+		
+		var index_find = -1;
+		for(var i=0;i<obj_div_others.length;i++){
+			if(name_other == obj_div_others[i].innerHTML){
+				index_find = i;
+				break;
+			}
+			
+		}
+		var index_empty = -1;
+		for(var i=0;i<obj_div_others.length;i++){
+			if("" == obj_div_others[i].innerHTML){
+				index_empty = i;
+				break;
+			}
+			
+		}
+		console.log(index_find);
+		console.log(index_empty);
+		
+		
+		if(index_find == -1){
+			var obj_div_other = obj_div_others[index_empty];
+			obj_div_other.innerHTML = name_other;
+		}
+		
+		for(var i=0;i<20;i++){
+			for(var j=0;j<10;j++){
+				var index_color = disp_other.substring((i*10+j),(i*10+j)+1);
+				if(index_find == -1){
+					arr_ctx_other[index_empty].fillStyle = colors[index_color]; 
+					arr_ctx_other[index_empty].fillRect(8*j, 8*i, 7, 7);
+				} else {
+					arr_ctx_other[index_find].fillStyle = colors[index_color]; 
+					arr_ctx_other[index_find].fillRect(8*j, 8*i, 7, 7);
+				}
+
+			}
+		}
+	}	
+	
+	
+	
+	function fn_keyboard(e){
+		if(!flag_move){
+			return;
+		}
+		fn_move(e.keyCode);
+	}
+	
+	var flag_move = false;
+	
+	function fn_start(){
+		
+		var obj_initial = document.getElementById("my_initial").value;
+		if(obj_initial.length<3){
+			alert("3글자이상 입력해주세요");
+			return;
+		}
+
+		webSocket = new WebSocket('ws://192.168.206.31/GAMESOCKET/omok');
+
+		webSocket.onerror = function(event) {
+			onError(event)
+		};
+		webSocket.onopen = function(event) {
+			onOpen(event)
+		};
+		webSocket.onmessage = function(event) {
+			onMessage(event)
+		};
+		
+		
+//  		setInterval("fn_move(40)", 1000);
+	}
+	
+	function fn_ready(){
+		var initial = document.getElementById("my_initial").value;
+		webSocket.send(initial+":"+"___"+":"+"read");
+	}
+	
+	
+	function onMessage(event) {
+		console.log(event.data);
+		draw_other(event.data);
+	}
+	function onOpen(event) {
+		document.getElementById("my_connect").innerHTML = "Connection Complete";
+		console.log("success:"+event);
+	}
+	function onError(event) {
+		console.log("error:"+event);
+	}
+	function send() {
+		var initial = document.getElementById("my_initial").value;
+		var str_arr = "";
+		
+		for(var i=0;i<arr2d_displ.length;i++){
+			for(var j=0;j<arr2d_displ[i].length;j++){
+				str_arr += arr2d_displ[i][j];
+			}
+		}
+		
+		webSocket.send(initial+":"+str_arr+":"+"disp");
+	}	
+	
+	function fn_move(keycode){
+		var before_i 		= block_i;
+		var before_j 		= block_j;
+		var before_status	= block_status;
+		
+		if(keycode == 40){
+			block_i++;
+		}
+		if(keycode == 37){
+			block_j--;
+		}
+		if(keycode == 39){
+			block_j++;
+		}
+		
+		if(keycode == 38){
+			changeStatus();
+		}
+		
+// 		setBlock();
+		
+		var flag = isCollisionWithSetBlock();
+		
+		if(flag){
+			block_i			= before_i;
+			block_j			= before_j;
+			block_status	= before_status;
+			setBlock();
+			if(keycode == 40){
+				goBlockToStack();
+				
+				checkAndRemoveStack();
+				
+				for(var j=0;j<arr2d_stack[3].length;j++){
+					if(arr2d_stack[3][j]>0){
+						flag_move = false;
+						alert("game over");
+						return;
+					}
+				}
+				
+				
+// 				block_type		= 1;
+ 				block_type		= parseInt(Math.random()*7)+1;
+				block_status	= 1;
+				block_i			= 1;
+				block_j			= 4;
+				setBlock();
+				
+				setDispl();
+				draw();
+				//console.log(arr2d_stack);
+				
+			}
+			
+			return;
+			
+		}
+		
+		setDispl();
+		
+		draw();
+		
+		//console.log(arr2d_displ);
+		
+// 		32 space
+
+
+	}
+	
+	function checkAndRemoveStack(){
+		
+		
+		var arr_temp = new Array();
+		
+		for(var i=0;i<arr2d_displ.length;i++){
+			var count10 = 0;
+			for(var j=0;j<arr2d_displ[i].length;j++){
+				if(arr2d_stack[i][j]>0){
+					count10++;	
+				}
+			}
+			if(count10<10){
+				arr_temp.push(arr2d_stack[i]);
+			}
+			
+			
+		}
+		
+		var count_refill = arr2d_displ.length - arr_temp.length;
+		
+		var obj_my_count = document.getElementById("my_count");
+		var my_count = parseInt( obj_my_count.innerHTML );
+		
+		my_count = my_count - count_refill;
+		obj_my_count.innerHTML = my_count;
+		
+		if(my_count <= 0 ){
+			
+			var initial = document.getElementById("my_initial").value;
+			webSocket.send(initial+":"+"___"+":"+"vict");
+
+			alert("mission complete");
+		}
+		
+		
+			
+		var arr_refill = new Array();
+		
+		for(var i=0;i<count_refill;i++){
+			arr_refill.push([0,0,0,0,0, 0,0,0,0,0]);
+		}
+		
+		arr2d_stack = arr_refill.concat(arr_temp);
+
+		
+		
+	}
+	
+	
+	
+	function goBlockToStack(){
+		for(var i=0;i<arr2d_displ.length;i++){
+			for(var j=0;j<arr2d_displ[i].length;j++){
+				if(arr2d_block[i][j]>0 ){
+					arr2d_stack[i][j] = arr2d_block[i][j];
+				}
+			}
+		}
+	}
+	
+	function isCollisionWithSetBlock(){
+		try {
+			setBlock();	
+		} catch (e) {
+			return true;
+		}
+		
+		
+		for(var i=0;i<arr2d_displ.length;i++){
+			for(var j=0;j<arr2d_displ[i].length;j++){
+				if(arr2d_block[i][j]>0 && arr2d_stack[i][j]>0){
+					return true;
+				}
+			}
+		}
+		var count_in = 0;
+		for(var i=0;i<arr2d_displ.length;i++){
+			for(var j=0;j<arr2d_displ[i].length;j++){
+				//console.log("length[i]:"+arr2d_block.length);
+				//console.log("length[j]:"+arr2d_block[i].length);
+				if(arr2d_block[i][j]>0 ){
+					count_in++;
+				}
+			}
+		}
+		//console.log("count_in:"+count_in);
+		if(count_in<4){
+			return true;
+		}
+		
+		
+		return false;
+	}
+	
+	
+	function changeStatus(){
+		if(block_type == 2 || block_type == 3 || block_type == 4){
+			if(block_status == 1){
+				block_status = 2;
+			} else if(block_status == 2){
+				block_status = 1;
+			}
+			
+		}
+		if(block_type == 5 || block_type == 6 || block_type == 7){
+			if(block_status == 1){
+				block_status = 2;
+			} else if(block_status == 2){
+				block_status = 3;
+			} else if(block_status == 3){
+				block_status = 4;
+			} else if(block_status == 4){
+				block_status = 1;
+			}
+		}
+		
+		
+	}
+	
+	function setBlock(){
+		setZero(arr2d_block);
+		
+		//console.log(block_i);
+		//console.log(block_j);		
+		
+		if(block_type == 1){
+			arr2d_block[block_i		][block_j	] = block_type;
+			arr2d_block[block_i+1	][block_j	] = block_type;
+			arr2d_block[block_i		][block_j+1	] = block_type;
+			arr2d_block[block_i+1	][block_j+1	] = block_type;
+		}
+		
+		if(block_type == 2){
+			if(block_status == 1){
+				arr2d_block[block_i-2	][block_j	] = block_type;
+				arr2d_block[block_i-1	][block_j	] = block_type;
+				arr2d_block[block_i		][block_j	] = block_type;
+				arr2d_block[block_i+1	][block_j	] = block_type;	
+			}
+			if(block_status == 2){
+				arr2d_block[block_i	][block_j-2	] = block_type;
+				arr2d_block[block_i	][block_j-1	] = block_type;
+				arr2d_block[block_i	][block_j	] = block_type;
+				arr2d_block[block_i	][block_j+1	] = block_type;	
+			}
+		}
+		
+		if (block_type == 3) {
+			if (block_status == 1) {
+				arr2d_block[block_i	- 1][block_j	] = block_type;
+				arr2d_block[block_i	   ][block_j	] = block_type;
+				arr2d_block[block_i	   ][block_j + 1] = block_type;
+				arr2d_block[block_i + 1][block_j + 1] = block_type;
+			}
+			if (block_status == 2) {
+				arr2d_block[block_i	   ][block_j	] = block_type;
+				arr2d_block[block_i	   ][block_j + 1] = block_type;
+				arr2d_block[block_i + 1][block_j - 1] = block_type;
+				arr2d_block[block_i + 1][block_j	] = block_type;
+			}
+		}
+		if (block_type == 4) {
+			if (block_status == 1) {
+				arr2d_block[block_i	- 1][block_j	] = block_type;
+				arr2d_block[block_i	   ][block_j	] = block_type;
+				arr2d_block[block_i	   ][block_j - 1] = block_type;
+				arr2d_block[block_i + 1][block_j - 1] = block_type;
+			}
+			if (block_status == 2) {
+				arr2d_block[block_i	   ][block_j - 1] = block_type;
+				arr2d_block[block_i	   ][block_j	] = block_type;
+				arr2d_block[block_i + 1][block_j	] = block_type;
+				arr2d_block[block_i + 1][block_j + 1] = block_type;
+			}
+		}
+		if (block_type == 5) {
+			if (block_status == 1) {
+				arr2d_block[block_i	- 1][block_j	] = block_type;
+				arr2d_block[block_i	   ][block_j	] = block_type;
+				arr2d_block[block_i	   ][block_j - 1] = block_type;
+				arr2d_block[block_i	   ][block_j + 1] = block_type;
+			}
+			if (block_status == 2) {
+				arr2d_block[block_i	- 1][block_j	] = block_type;
+				arr2d_block[block_i	   ][block_j	] = block_type;
+				arr2d_block[block_i	   ][block_j + 1] = block_type;
+				arr2d_block[block_i	+ 1][block_j 	] = block_type;
+			}
+			if (block_status == 3) {
+				arr2d_block[block_i	   ][block_j - 1] = block_type;
+				arr2d_block[block_i	   ][block_j	] = block_type;
+				arr2d_block[block_i	   ][block_j + 1] = block_type;
+				arr2d_block[block_i	+ 1][block_j 	] = block_type;
+			}
+			if (block_status == 4) {
+				arr2d_block[block_i	- 1][block_j	] = block_type;
+				arr2d_block[block_i	   ][block_j	] = block_type;
+				arr2d_block[block_i	   ][block_j - 1] = block_type;
+				arr2d_block[block_i	+ 1][block_j 	] = block_type;
+			}
+		}
+		if (block_type == 6) {
+			if (block_status == 1) {
+				arr2d_block[block_i	- 1][block_j	] = block_type;
+				arr2d_block[block_i	- 1][block_j + 1] = block_type;
+				arr2d_block[block_i	   ][block_j 	] = block_type;
+				arr2d_block[block_i	+ 1][block_j	] = block_type;
+			}
+			if (block_status == 2) {
+				arr2d_block[block_i	   ][block_j - 1] = block_type;
+				arr2d_block[block_i	   ][block_j	] = block_type;
+				arr2d_block[block_i	   ][block_j + 1] = block_type;
+				arr2d_block[block_i	+ 1][block_j + 1] = block_type;
+			}
+			if (block_status == 3) {
+				arr2d_block[block_i	- 1][block_j	] = block_type;
+				arr2d_block[block_i	   ][block_j	] = block_type;
+				arr2d_block[block_i + 1][block_j - 1] = block_type;
+				arr2d_block[block_i	+ 1][block_j	] = block_type;
+			}
+			if (block_status == 4) {
+				arr2d_block[block_i - 1][block_j - 1] = block_type;
+				arr2d_block[block_i	   ][block_j - 1] = block_type;
+				arr2d_block[block_i	   ][block_j 	] = block_type;
+				arr2d_block[block_i	   ][block_j + 1] = block_type;
+			}
+		}
+		if (block_type == 7) {
+			
+			
+			if (block_status == 1) {
+				arr2d_block[block_i	- 1][block_j - 1] = block_type;
+				arr2d_block[block_i	- 1][block_j	] = block_type;
+				arr2d_block[block_i	   ][block_j 	] = block_type;
+				arr2d_block[block_i	+ 1][block_j	] = block_type;
+			}
+			if (block_status == 2) {
+				arr2d_block[block_i - 1][block_j + 1] = block_type;
+				arr2d_block[block_i	   ][block_j - 1] = block_type;
+				arr2d_block[block_i	   ][block_j 	] = block_type;
+				arr2d_block[block_i	   ][block_j + 1] = block_type;
+			}
+			if (block_status == 3) {
+				arr2d_block[block_i	- 1][block_j	] = block_type;
+				arr2d_block[block_i	   ][block_j	] = block_type;
+				arr2d_block[block_i + 1][block_j 	] = block_type;
+				arr2d_block[block_i	+ 1][block_j + 1] = block_type;
+			}
+			if (block_status == 4) {
+				arr2d_block[block_i    ][block_j - 1] = block_type;
+				arr2d_block[block_i	   ][block_j	] = block_type;
+				arr2d_block[block_i	   ][block_j + 1] = block_type;
+				arr2d_block[block_i + 1][block_j - 1] = block_type;
+			}
+		}
+	}
+	function setDispl(){
+		setZero(arr2d_displ);
+		for(var i=0;i<arr2d_displ.length;i++){
+			for(var j=0;j<arr2d_displ[i].length;j++){
+				if(arr2d_block[i][j]>0){
+					arr2d_displ[i][j] = arr2d_block[i][j];
+				}
+				if(arr2d_stack[i][j]>0){
+					arr2d_displ[i][j] = arr2d_stack[i][j];
+				}
+			}
+		}
+	}
+	
+	function setZero(arr2d){
+		for(var i=0;i<arr2d.length;i++){
+			for(var j=0;j<arr2d[i].length;j++){
+				arr2d[i][j] = 0;
+			}
+		}
+	}
+	
+</script>
+
+</head>
+<body onkeydown="fn_keyboard(event)" >
+	new
+	<input id="my_initial" maxlength="3" />
+
+	<input type="button" onclick="fn_start()" value="Connection"  />
+	<input type="button" onclick="fn_ready()" value="ready"  />
+	
+	<div id="my_count" >15</div>
+	<div id="my_connect" >No Connection</div>
+	
+	<table border="1">
+		<tr>
+			<td rowspan="4">
+				<canvas id="canvas" width="300" height="600">
+					이 브라우저는 캔버스를 지원하지 않습니다.
+				</canvas>
+			</td>
+			<td>	
+				<div name="div_other" ></div>
+				<canvas name="canvas_other" width="80" height="160">
+					이 브라우저는 캔버스를 지원하지 않습니다.
+				</canvas>
+			</td>
+			<td>	
+				<div name="div_other" ></div>
+				<canvas name="canvas_other" width="80" height="160">
+					이 브라우저는 캔버스를 지원하지 않습니다.
+				</canvas>
+			</td>
+			<td>	
+				<div name="div_other" ></div>
+				<canvas name="canvas_other" width="80" height="160">
+					이 브라우저는 캔버스를 지원하지 않습니다.
+				</canvas>
+			</td>
+			<td>	
+				<div name="div_other" ></div>
+				<canvas name="canvas_other" width="80" height="160">
+					이 브라우저는 캔버스를 지원하지 않습니다.
+				</canvas>
+			</td>
+			<td>	
+				<div name="div_other" ></div>
+				<canvas name="canvas_other" width="80" height="160">
+					이 브라우저는 캔버스를 지원하지 않습니다.
+				</canvas>
+			</td>
+			<td>	
+				<div name="div_other" ></div>
+				<canvas name="canvas_other" width="80" height="160">
+					이 브라우저는 캔버스를 지원하지 않습니다.
+				</canvas>
+			</td>
+			
+			
+			
+		</tr>
+		<tr>
+			<td>	
+				<div name="div_other" ></div>
+				<canvas name="canvas_other" width="80" height="160">
+					이 브라우저는 캔버스를 지원하지 않습니다.
+				</canvas>
+			</td>
+			<td>	
+				<div name="div_other" ></div>
+				<canvas name="canvas_other" width="80" height="160">
+					이 브라우저는 캔버스를 지원하지 않습니다.
+				</canvas>
+			</td>
+			<td>	
+				<div name="div_other" ></div>
+				<canvas name="canvas_other" width="80" height="160">
+					이 브라우저는 캔버스를 지원하지 않습니다.
+				</canvas>
+			</td>
+			<td>	
+				<div name="div_other" ></div>
+				<canvas name="canvas_other" width="80" height="160">
+					이 브라우저는 캔버스를 지원하지 않습니다.
+				</canvas>
+			</td>
+			<td>	
+				<div name="div_other" ></div>
+				<canvas name="canvas_other" width="80" height="160">
+					이 브라우저는 캔버스를 지원하지 않습니다.
+				</canvas>
+			</td>
+			<td>	
+				<div name="div_other" ></div>
+				<canvas name="canvas_other" width="80" height="160">
+					이 브라우저는 캔버스를 지원하지 않습니다.
+				</canvas>
+			</td>
+			
+
+		</tr>
+		<tr>
+			<td>	
+				<div name="div_other" ></div>
+				<canvas name="canvas_other" width="80" height="160">
+					이 브라우저는 캔버스를 지원하지 않습니다.
+				</canvas>
+			</td>
+			<td>	
+				<div name="div_other" ></div>
+				<canvas name="canvas_other" width="80" height="160">
+					이 브라우저는 캔버스를 지원하지 않습니다.
+				</canvas>
+			</td>
+			<td>	
+				<div name="div_other" ></div>
+				<canvas name="canvas_other" width="80" height="160">
+					이 브라우저는 캔버스를 지원하지 않습니다.
+				</canvas>
+			</td>
+			<td>	
+				<div name="div_other" ></div>
+				<canvas name="canvas_other" width="80" height="160">
+					이 브라우저는 캔버스를 지원하지 않습니다.
+				</canvas>
+			</td>
+			<td>	
+				<div name="div_other" ></div>
+				<canvas name="canvas_other" width="80" height="160">
+					이 브라우저는 캔버스를 지원하지 않습니다.
+				</canvas>
+			</td>
+			<td>	
+				<div name="div_other" ></div>
+				<canvas name="canvas_other" width="80" height="160">
+					이 브라우저는 캔버스를 지원하지 않습니다.
+				</canvas>
+			</td>
+			
+
+		</tr>
+		<tr>
+			<td>	
+				<div name="div_other" ></div>
+				<canvas name="canvas_other" width="80" height="160">
+					이 브라우저는 캔버스를 지원하지 않습니다.
+				</canvas>
+			</td>
+			<td>	
+				<div name="div_other" ></div>
+				<canvas name="canvas_other" width="80" height="160">
+					이 브라우저는 캔버스를 지원하지 않습니다.
+				</canvas>
+			</td>
+			<td>	
+				<div name="div_other" ></div>
+				<canvas name="canvas_other" width="80" height="160">
+					이 브라우저는 캔버스를 지원하지 않습니다.
+				</canvas>
+			</td>
+			<td>	
+				<div name="div_other" ></div>
+				<canvas name="canvas_other" width="80" height="160">
+					이 브라우저는 캔버스를 지원하지 않습니다.
+				</canvas>
+			</td>
+			<td>	
+				<div name="div_other" ></div>
+				<canvas name="canvas_other" width="80" height="160">
+					이 브라우저는 캔버스를 지원하지 않습니다.
+				</canvas>
+			</td>
+			<td>	
+				<div name="div_other" ></div>
+				<canvas name="canvas_other" width="80" height="160">
+					이 브라우저는 캔버스를 지원하지 않습니다.
+				</canvas>
+			</td>
+
+		</tr>
+		
+		
+	
+	</table>
+	
+
+
+
+</body>
+</html>
+
+
+
+
+
+
+
+

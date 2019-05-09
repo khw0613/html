@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script src="jquery-1.12.4.js"></script>
+<script type="text/javascript">
+function fn_search(){
+	var p_get_addr = $("input[name=street]").val();
+	
+	   $.ajax({
+	       type : "get",
+	       url : "myserveltserach",
+	       data : {
+	          p_addr : p_get_addr
+	       },
+	       dataType : "json",
+
+	       success : function(data) {
+	    	   
+	    	   console.log(data);
+	    	if(p_get_addr == null){
+	    		alert("값을 입력해줘");
+	    		return;
+	    	}
+	    	renderTable1(data);
+	          
+	       },
+
+	       error : function(xhr, status, error) {
+	          console.log("에러!: " + error);
+
+	       },
+
+	    });
+
+
+}
+function renderTable1(data) {
+    var text = "";
+    
+    for (var i = 0; i < data.length; i++) {
+    	var addr1 = data[i].city + " " + data[i].gu;
+        var addr2 = data[i].street + " " + data[i].street_num;
+        
+       text += "<tr ondblclick=\"fn_fix("+data[i].zipcode+",'"+addr1+"','"+addr2+"')\">";
+       text += "   <td>" + data[i].zipcode + "</td>";
+       text += "   <td>" + data[i].city + "</td>";
+       text += "   <td>" + data[i].gu + "</td>";
+       text += "   <td>" + data[i].street + "</td>";
+       text += "   <td>" + data[i].street_num + "</td>";
+       text += "</tr>";
+       $("#my_tbody").html(text);
+
+    }
+ }
+
+function fn_fix(a,b,c){
+	window.opener.document.frm.zipcode.value = a;
+	window.opener.document.frm.addr1.value = b;
+	window.opener.document.frm.addr2.value = c;
+	window.close();
+}
+</script>
+</head>
+<body>
+	<table>
+		<tr>
+			<td>동입력</td>
+			<td><input type="text" name="street" value=""></td>
+			<td><input type="button" value="검색" onclick="fn_search()"></td>
+			
+		</tr>
+		
+		<tbody id="my_tbody">
+			<tr>
+				<td colspan="3" ondblclick="fn_fix()">
+				검색자료가 없습니다.
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</body>
+</html>

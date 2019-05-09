@@ -1,0 +1,224 @@
+<!doctype html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>Untitled Document</title>
+	<script>
+		var words = ["안녕하세요", "일본어", "강아지", "대한민국", "배재대", "PaiChai"];
+		var divWordArr;
+		var cbArr;
+		var countDrop = 0;
+		var countLife = 10;
+		var flagLoop = false;
+
+		function init() {
+			var divWord00 = document.getElementById("word00");
+			var divWord01 = document.getElementById("word01");
+			var divWord02 = document.getElementById("word02");
+			var divWord03 = document.getElementById("word03");
+			var divWord04 = document.getElementById("word04");
+
+			var divWord05 = document.getElementById("word05");
+			var divWord06 = document.getElementById("word06");
+			var divWord07 = document.getElementById("word07");
+			var divWord08 = document.getElementById("word08");
+			var divWord09 = document.getElementById("word09");
+
+			var divWord10 = document.getElementById("word10");
+			var divWord11 = document.getElementById("word11");
+			var divWord12 = document.getElementById("word12");
+			var divWord13 = document.getElementById("word13");
+			var divWord14 = document.getElementById("word14");
+
+			var divWord15 = document.getElementById("word15");
+			var divWord16 = document.getElementById("word16");
+			var divWord17 = document.getElementById("word17");
+			var divWord18 = document.getElementById("word18");
+			var divWord19 = document.getElementById("word19");
+
+
+			//---------------------------
+
+			var cb00 = document.getElementById("cb00");
+			var cb01 = document.getElementById("cb01");
+			var cb02 = document.getElementById("cb02");
+			var cb03 = document.getElementById("cb03");
+			var cb04 = document.getElementById("cb04");
+
+			var cb05 = document.getElementById("cb05");
+			var cb06 = document.getElementById("cb06");
+			var cb07 = document.getElementById("cb07");
+			var cb08 = document.getElementById("cb08");
+			var cb09 = document.getElementById("cb09");
+
+			divWordArr = [divWord00, divWord01, divWord02, divWord03, divWord04, divWord05, divWord06, divWord07, divWord08, divWord09, divWord10, divWord11, divWord12, divWord13, divWord14, divWord15, divWord16, divWord17, divWord18, divWord19];
+
+			cbArr = [cb00, cb01, cb02, cb03, cb04, cb05,
+				cb06, cb07, cb08, cb09
+			];
+
+			for (var i = 0; i < divWordArr.length; i++) {
+				var rndWords = parseInt(Math.random() * words.length);
+				divWordArr[i].innerHTML = words[rndWords];
+				divWordArr[i].style.top = "-20px";
+
+				var rndLeft = parseInt(Math.random() * 380 + 20);
+				divWordArr[i].style.left = rndLeft + "px";
+			}
+
+			showCountLife(countLife);
+
+		} // end init();
+
+		function btnKeyPress(event) {
+			if (event.keyCode == 13) {
+				removeSameWord();
+			}
+		} // end btnKeyPress
+
+		function removeSameWord() {
+			var strType = document.getElementById("txtType").value;
+			document.getElementById("txtType").value = "";
+
+			for (var i = 0; i < countDrop; i++) {
+				var strWord = divWordArr[i].innerHTML;
+				if (strType == strWord && divWordArr[i].style.visibility == "visible") {
+					divWordArr[i].style.visibility = "hidden";
+					break;
+				}
+			}
+		} // end removeSameWord
+
+		function timedCount() {
+			var rndCountDrop = Math.random();
+			if (rndCountDrop < 0.02 && countDrop < 20) {
+				countDrop++;
+			}
+
+			for (var i = 0; i < countDrop; i++) {
+				var strTop = divWordArr[i].style.top;
+				var strVisible = divWordArr[i].style.visibility;
+
+				var topBuff = parseInt(strTop.substring(0, strTop.length - 2));
+				if (topBuff > 350 && divWordArr[i].style.visibility == "visible") {
+					divWordArr[i].style.visibility = "hidden";
+					countLife--;
+					showCountLife(countLife);
+
+				}
+			}
+
+			if (countLife <= 0) {
+				var btnStart = document.getElementById("btnStart");
+				btnStart.value = "start";
+
+				flagLoop = false;
+				alert("YOU LOSE");
+				return;
+			}
+
+			if (isAllRemove()) {
+				alert("YOU WIN");
+				return;
+			}
+
+			if (countDrop >= 20) {
+				var strTop = divWordArr[20 - 1].style.top;
+				var topBuff = parseInt(strTop.substring(0, strTop.length - 2));
+				if (topBuff > 350) {
+					var btnStart = document.getElementById("btnStart");
+					btnStart.value = "start";
+					flagLoop = false;
+					alert("YOU WIN");
+					return;
+				}
+			}
+			t = setTimeout("timedCount()", 40);
+		} // end timedCount
+
+		function isAllRemove() {
+			for (var i = 0; i < divWordArr.length; i++) {
+				if (divWordArr[i].style.visibility == "visible") {
+					return false;
+				}
+			}
+			return true;
+		} // end isAllRemove
+
+		function showCountLife(paramLife) {
+			for (var i = 0; i < cbArr.length; i++) {
+				cbArr[i].checked = false;
+			}
+
+			for (var j = 0; j < paramLife; j++) {
+				cbArr[j].checked = true;
+			}
+		} // end showCountLife
+
+		function btnStart() {
+			if (flagLoop)
+				return;
+
+			var btnStart = document.getElementById("btnStart");
+			btnStart.value = "Looping";
+			flagLoop = true;
+			timedCount();
+		} // end btnStart
+
+		function downDiv(div) {
+			var str = div.start.top;
+			var topBuff = parseInt(str.substring(0, str.length - 2));
+
+			topBuff += 1;
+			div.style.top = topBuff + "px";
+		} //end downDiv
+		
+	</script>
+</head>
+
+<body onload="init()">
+
+	<div style="position: absolute; left: 10px; top: 10px;">
+		<input id="cb00" type="checkbox" /><br />
+		<input id="cb01" type="checkbox" /><br />
+		<input id="cb02" type="checkbox" /><br />
+		<input id="cb03" type="checkbox" /><br />
+		<input id="cb04" type="checkbox" /><br />
+		<input id="cb05" type="checkbox" /><br />
+		<input id="cb06" type="checkbox" /><br />
+		<input id="cb07" type="checkbox" /><br />
+		<input id="cb08" type="checkbox" /><br />
+		<input id="cb09" type="checkbox" /><br />
+	</div>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; >>
+	<input id="txtType" type="text" onkeypress="btnKeyPress(event)" />
+	<input id="btnStart" value="start" type="button" onclick="btnStart()" />
+	
+	<div id="word00" style="position: absolute; left: 200px; top: -20px; visibility: visible"></div>
+	<div id="word01" style="position: absolute; left: 200px; top: -20px; visibility: visible"></div>
+	<div id="word02" style="position: absolute; left: 200px; top: -20px; visibility: visible"></div>
+	<div id="word03" style="position: absolute; left: 200px; top: -20px; visibility: visible"></div>
+	<div id="word04" style="position: absolute; left: 200px; top: -20px; visibility: visible"></div>
+	
+	<div id="word05" style="position: absolute; left: 200px; top: -20px; visibility: visible"></div>
+	<div id="word06" style="position: absolute; left: 200px; top: -20px; visibility: visible"></div>
+	<div id="word07" style="position: absolute; left: 200px; top: -20px; visibility: visible"></div>
+	<div id="word08" style="position: absolute; left: 200px; top: -20px; visibility: visible"></div>
+	<div id="word09" style="position: absolute; left: 200px; top: -20px; visibility: visible"></div>
+	
+	<div id="word10" style="position: absolute; left: 200px; top: -20px; visibility: visible"></div>
+	<div id="word11" style="position: absolute; left: 200px; top: -20px; visibility: visible"></div>
+	<div id="word12" style="position: absolute; left: 200px; top: -20px; visibility: visible"></div>
+	<div id="word13" style="position: absolute; left: 200px; top: -20px; visibility: visible"></div>
+	<div id="word14" style="position: absolute; left: 200px; top: -20px; visibility: visible"></div>
+	
+	<div id="word15" style="position: absolute; left: 200px; top: -20px; visibility: visible"></div>
+	<div id="word16" style="position: absolute; left: 200px; top: -20px; visibility: visible"></div>
+	<div id="word17" style="position: absolute; left: 200px; top: -20px; visibility: visible"></div>
+	<div id="word18" style="position: absolute; left: 200px; top: -20px; visibility: visible"></div>
+	<div id="word19" style="position: absolute; left: 200px; top: -20px; visibility: visible"></div>
+
+</body>
+
+</html>

@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<style type="text/css">
+/*  전체 적으로 적용하는것  */
+table, tr, td{
+		border: 0px;
+		padding: 0px;
+		
+		border-collapse: collapse;
+		
+}
+img{
+	display: block;
+}
+
+	
+	
+</style>
+<script type="text/javascript">
+
+	var arr2D = new Array();
+	var arr2DImg = new Array();
+	var status = 1;
+	function init() {
+
+		for (var i = 0; i < 10; i++) {
+			var arrRow = new Array();
+			arrRow.push(0); arrRow.push(0);
+			arrRow.push(0); arrRow.push(0);
+			arrRow.push(0); arrRow.push(0);
+			arrRow.push(0); arrRow.push(0);
+			arrRow.push(0); arrRow.push(0);
+		
+			arr2D.push(arrRow);
+		}
+
+		console.log(arr2D);
+
+		var girds = document.getElementsByClassName("grid");
+
+		for (var i = 0; i < girds.length; i += 10) {
+			var arrRowImg = new Array();
+			arrRowImg.push(girds[i + 0]);
+			arrRowImg.push(girds[i + 1]);
+			arrRowImg.push(girds[i + 2]);
+			arrRowImg.push(girds[i + 3]);
+			arrRowImg.push(girds[i + 4]);
+
+			arrRowImg.push(girds[i + 5]);
+			arrRowImg.push(girds[i + 6]);
+			arrRowImg.push(girds[i + 7]);
+			arrRowImg.push(girds[i + 8]);
+			arrRowImg.push(girds[i + 9]);
+			arr2DImg.push(arrRowImg);
+
+		}
+
+		console.log(arr2DImg);
+		console.log(arrRowImg);
+
+		for (var i = 0; i < arr2D.length; i++) {
+			for (var j = 0; j < arr2D[i].length; j++) {
+				arr2DImg[i][j].alt = i + "," + j;
+
+			}
+		}
+	}
+	// 	화면에 배경, 흑돌, 백돌 보여주는거
+	function myDisplay() {
+		for (var i = 0; i < arr2D.length; i++) {
+			for (var j = 0; j < arr2D[i].length; j++) {
+				arr2DImg[i][j].src = "01/" + arr2D[i][j] + ".jpg";
+
+			}
+		}
+
+	}
+	// 	클릭 햇을떄 이벤트
+	function myclick(obj) {
+		var str_alt = obj.alt;
+		var arr_alt = str_alt.split(",");
+		var i = Number(arr_alt[0]);
+		var j = Number(arr_alt[1]);
+
+		if (arr2D[i][j] != 0) {
+			alert("딴데 둬");
+			return;
+		}
+
+		arr2D[i][j] = status;
+		myDisplay();
+
+		var cnt_top = fn_top(i, j);
+		var cnt_down = fn_dwon(i, j);
+
+		var cnt_left = fn_left(i, j);
+		var cnt_right = fn_right(i, j);
+
+		var cnt_topright = fn_topright(i, j);
+		var cnt_downleft = fn_downleft(i, j);
+
+		var cnt_topleft = fn_topleft(i, j);
+		var cnt_downright = fn_downright(i, j);
+
+		var arr_cnt = new Array();
+
+		arr_cnt.push(cnt_top + cnt_down + 1);
+		arr_cnt.push(cnt_left + cnt_right + 1);
+		arr_cnt.push(cnt_topright + cnt_downleft + 1);
+		arr_cnt.push(cnt_topleft + cnt_downright + 1);
+
+		for (var i = 0; i < arr_cnt.length; i++) {
+			if (arr_cnt[i] == 5) {
+				if (status == 1) {
+					alert("흑돌이 이겼습니다.");
+				}
+				if (status == 2) {
+					alert("백돌이 이겼습니다.");
+				}
+				return;
+			}
+		}
+		
+		
+
+		if (status == 1) {
+			status = 2;
+		} else if (status == 2) {
+			status = 1;
+		}
+
+	}
+	// 	클릭햇을때 좌표에 해당하는 것 카운트
+	function fn_top(i, j) {
+		var ret_cnt = 0;
+
+		while (true) {
+			i = i - 1;
+			j = j;
+			try {
+				if (arr2D[i][j] == status) {
+					ret_cnt++;
+				} else {
+					return ret_cnt;
+				}
+			} catch (e) {
+				return ret_cnt;
+			}
+
+		}
+	}
+	function fn_dwon(i, j) {
+		var ret_cnt = 0;
+
+		while (true) {
+			i = i + 1;
+			j = j;
+			try {
+				if (arr2D[i][j] == status) {
+					ret_cnt++;
+				} else {
+					return ret_cnt;
+				}
+			} catch (e) {
+				return ret_cnt;
+			}
+
+		}
+	}
+	function fn_left(i, j) {
+		var ret_cnt = 0;
+
+		while (true) {
+			i = i;
+			j = j - 1;
+			try {
+				if (arr2D[i][j] == status) {
+					ret_cnt++;
+				} else {
+					return ret_cnt;
+				}
+			} catch (e) {
+				return ret_cnt;
+			}
+
+		}
+	}
+	function fn_right(i, j) {
+		var ret_cnt = 0;
+
+		while (true) {
+			i = i;
+			j = j + 1;
+			try {
+				if (arr2D[i][j] == status) {
+					ret_cnt++;
+				} else {
+					return ret_cnt;
+				}
+			} catch (e) {
+				return ret_cnt;
+			}
+
+		}
+	}
+	function fn_topleft(i, j) {
+		var ret_cnt = 0;
+
+		while (true) {
+			i = i - 1;
+			j = j - 1;
+			try {
+				if (arr2D[i][j] == status) {
+					ret_cnt++;
+				} else {
+					return ret_cnt;
+				}
+			} catch (e) {
+				return ret_cnt;
+			}
+
+		}
+	}
+	function fn_downright(i, j) {
+		var ret_cnt = 0;
+
+		while (true) {
+			i = i + 1;
+			j = j + 1;
+			try {
+				if (arr2D[i][j] == status) {
+					ret_cnt++;
+				} else {
+					return ret_cnt;
+				}
+			} catch (e) {
+				return ret_cnt;
+			}
+
+		}
+	}
+	function fn_topright(i, j) {
+		var ret_cnt = 0;
+
+		while (true) {
+			i = i - 1;
+			j = j + 1;
+			try {
+				if (arr2D[i][j] == status) {
+					ret_cnt++;
+				} else {
+					return ret_cnt;
+				}
+			} catch (e) {
+				return ret_cnt;
+			}
+
+		}
+	}
+	function fn_downleft(i, j) {
+		var ret_cnt = 0;
+
+		while (true) {
+			i = i + 1;
+			j = j - 1;
+			try {
+				if (arr2D[i][j] == status) {
+					ret_cnt++;
+				} else {
+					return ret_cnt;
+				}
+			} catch (e) {
+				return ret_cnt;
+			}
+
+		}
+	}
+</script>
+</head>
+<body onload="init()">
+<a href="javascript:myDisplay()">화면보기</a>
+
+	<table>
+		<tr>
+			<td><img class="grid" src="01/0.jpg" onclick="myclick(this)"/></td>
+			<td><img class="grid" src="01/0.jpg" onclick="myclick(this)"/></td> 
+			<td><img class="grid" src="01/0.jpg" onclick="myclick(this)"/></td> 
+			<td><img class="grid" src="01/0.jpg" onclick="myclick(this)"/></td> 
+			<td><img class="grid" src="01/0.jpg" onclick="myclick(this)"/></td> 
+			
+			<td><img class="grid" src="01/0.jpg" onclick="myclick(this)"/></td> 
+			<td><img class="grid" src="01/0.jpg" onclick="myclick(this)"/></td> 
+			<td><img class="grid" src="01/0.jpg" onclick="myclick(this)"/></td> 
+			<td><img class="grid" src="01/0.jpg" onclick="myclick(this)"/></td> 
+			<td><img class="grid" src="01/0.jpg" onclick="myclick(this)"/></td> 
+			
+		</tr>
+		<tr>
+			<td><img class="grid" src="01/0.jpg" onclick="myclick(this)"/></td>
+			<td><img class="grid" src="01/0.jpg" onclick="myclick(this)"/></td> 
+			<td><img class="grid" src="01/0.jpg" onclick="myclick(this)"/></td> 
+			<td><img class="grid" src="01/0.jpg" onclick="myclick(this)"/></td> 
+			<td><img class="grid" src="01/0.jpg" onclick="myclick(this)"/></td> 
+			
+			<td><img class="grid" src="01/0.jpg" onclick="myclick(this)"/></td> 
+			<td><img class="grid" src="01/0.jpg" onclick="myclick(this)"/></td> 
+			<td><img class="grid" src="01/0.jpg" onclick="myclick(this)"/></td> 
+			<td><img class="grid" src="01/0.jpg" onclick="myclick(this)"/></td> 
+			<td><img class="grid" src="01/0.jpg" onclick="myclick(this)"/></td> 
+			
+		</tr>
+		<tr>
+			<td><img class="grid" src="01/0.jpg" onclick="myclick(this)"/></td>
+			<td><img class="grid" src="01/0.jpg" onclick="myclick(this)"/></td> 
+			<td><img class="grid" src="01/0.jpg" onclick="myclick(this)"/></td> 
+			<td><img class="grid" src="01/0.jpg" onclick="myclick(this)"/></td> 
+			<td><img class="grid" src="01/0.jpg" onclick="myclick(this)"/></td> 
+			
+			<td><img class="grid" src="01/0.jpg" onclick="myclick(this)"/></td> 
+			<td><img class="grid" src="01/0.jpg" onclick="myclick(this)"/></td> 
+			<td><img class="grid" src="01/0.jpg" onclick="myclick(this)"/></td> 
+			<td><img class="grid" src="01/0.jpg" onclick="myclick(this)"/></td> 
+			<td><img class="grid" src="01/0.jpg" onclick="myclick(this)"/></td> 
+			
+		</tr>
+		<tr>
+			<td><img class="grid" src="01/0.jpg" onclick="myclick(this)"/></td>
+			<td><img class="grid" src="01/0.jpg" onclick="myclick(this)"/></td> 
+			<td><img class="grid" src="01/0.jpg" onclick="myclick(this)"/></td> 
+			<td><img class="grid" src="01/0.jpg" onclick="myclick(this)"/></td> 
+			<td><img class="grid" src="01/0.jpg" onclick="myclick(this)"/></td> 
+			
+			<td><img class="grid" src="01/0.jpg" onclick="myclick(this)"/></td> 
+			<td><img class="grid" src="01/0.jpg" onclick="myclick(this)"/></td> 
+			<td><img class="grid" src="01/0.jpg" onclick="myclick(this)"/></td> 
+			<td><img class="grid" src="01/0.jpg" onclick="myclick(this)"/></td> 
+			<td><img class="grid" src="01/0.jpg" onclick="myclick(this)"/></td> 
+			
+		</tr>
+		<tr>
+			<td><img class="grid" src="01/0.jpg" onclick="myclick(this)"/></td>
+			<td><img class="grid" src="01/0.jpg" onclick="myclick(this)"/></td> 
+			<td><img class="grid" src="01/0.jpg" onclick="myclick(this)"/></td> 
+			<td><img class="grid" src="01/0.jpg" onclick="myclick(this)"/></td> 
+			<td><img class="grid" src="01/0.jpg" onclick="myclick(this)"/></td> 
+			
+			<td><img class="grid" src="01/0.jpg" onclick="myclick(this)"/></td> 
+			<td><img class="grid" src="01/0.jpg" onclick="myclick(this)"/></td> 
+			<td><img class="grid" src="01/0.jpg" onclick="myclick(this)"/></td> 
+			<td><img class="grid" src="01/0.jpg" onclick="myclick(this)"/></td> 
+			<td><img class="grid" src="01/0.jpg" onclick="myclick(this)"/></td> 
+			
+		</tr>
+		<tr>
+			<td><img class="grid" src="01/0.jpg" onclick="myclick(this)"/></td>
+			<td><img class="grid" src="01/0.jpg" onclick="myclick(this)"/></td> 
+			<td><img class="grid" src="01/0.jpg" onclick="myclick(this)"/></td> 
+			<td><img class="grid" src="01/0.jpg" onclick="myclick(this)"/></td> 
+			<td><img class="grid" src="01/0.jpg" onclick="myclick(this)"/></td> 
+			
+			<td><img class="grid" src="01/0.jpg" onclick="myclick(this)"/></td> 
+			<td><img class="grid" src="01/0.jpg" onclick="myclick(this)"/></td> 
+			<td><img class="grid" src="01/0.jpg" onclick="myclick(this)"/></td> 
+			<td><img class="grid" src="01/0.jpg" onclick="myclick(this)"/></td> 
+			<td><img class="grid" src="01/0.jpg" onclick="myclick(this)"/></td> 
+			
+		</tr>
+		<tr>
+			<td><img class="grid" src="01/0.jpg" onclick="myclick(this)"/></td>
+			<td><img class="grid" src="01/0.jpg" onclick="myclick(this)"/></td> 
+			<td><img class="grid" src="01/0.jpg" onclick="myclick(this)"/></td> 
+			<td><img class="grid" src="01/0.jpg" onclick="myclick(this)"/></td> 
+			<td><img class="grid" src="01/0.jpg" onclick="myclick(this)"/></td> 
+			
+			<td><img class="grid" src="01/0.jpg" onclick="myclick(this)"/></td> 
+			<td><img class="grid" src="01/0.jpg" onclick="myclick(this)"/></td> 
+			<td><img class="grid" src="01/0.jpg" onclick="myclick(this)"/></td> 
+			<td><img class="grid" src="01/0.jpg" onclick="myclick(this)"/></td> 
+			<td><img class="grid" src="01/0.jpg" onclick="myclick(this)"/></td> 
+			
+		</tr>
+		<tr>
+			<td><img class="grid" src="01/0.jpg" onclick="myclick(this)"/></td>
+			<td><img class="grid" src="01/0.jpg" onclick="myclick(this)"/></td> 
+			<td><img class="grid" src="01/0.jpg" onclick="myclick(this)"/></td> 
+			<td><img class="grid" src="01/0.jpg" onclick="myclick(this)"/></td> 
+			<td><img class="grid" src="01/0.jpg" onclick="myclick(this)"/></td> 
+			
+			<td><img class="grid" src="01/0.jpg" onclick="myclick(this)"/></td> 
+			<td><img class="grid" src="01/0.jpg" onclick="myclick(this)"/></td> 
+			<td><img class="grid" src="01/0.jpg" onclick="myclick(this)"/></td> 
+			<td><img class="grid" src="01/0.jpg" onclick="myclick(this)"/></td> 
+			<td><img class="grid" src="01/0.jpg" onclick="myclick(this)"/></td> 
+			
+		</tr>
+		<tr>
+			<td><img class="grid" src="01/0.jpg" onclick="myclick(this)"/></td>
+			<td><img class="grid" src="01/0.jpg" onclick="myclick(this)"/></td> 
+			<td><img class="grid" src="01/0.jpg" onclick="myclick(this)"/></td> 
+			<td><img class="grid" src="01/0.jpg" onclick="myclick(this)"/></td> 
+			<td><img class="grid" src="01/0.jpg" onclick="myclick(this)"/></td> 
+			
+			<td><img class="grid" src="01/0.jpg" onclick="myclick(this)"/></td> 
+			<td><img class="grid" src="01/0.jpg" onclick="myclick(this)"/></td> 
+			<td><img class="grid" src="01/0.jpg" onclick="myclick(this)"/></td> 
+			<td><img class="grid" src="01/0.jpg" onclick="myclick(this)"/></td> 
+			<td><img class="grid" src="01/0.jpg" onclick="myclick(this)"/></td> 
+			
+		</tr>
+		<tr>
+			<td><img class="grid" src="01/0.jpg" onclick="myclick(this)"/></td>
+			<td><img class="grid" src="01/0.jpg" onclick="myclick(this)"/></td> 
+			<td><img class="grid" src="01/0.jpg" onclick="myclick(this)"/></td> 
+			<td><img class="grid" src="01/0.jpg" onclick="myclick(this)"/></td> 
+			<td><img class="grid" src="01/0.jpg" onclick="myclick(this)"/></td> 
+			
+			<td><img class="grid" src="01/0.jpg" onclick="myclick(this)"/></td> 
+			<td><img class="grid" src="01/0.jpg" onclick="myclick(this)"/></td> 
+			<td><img class="grid" src="01/0.jpg" onclick="myclick(this)"/></td> 
+			<td><img class="grid" src="01/0.jpg" onclick="myclick(this)"/></td> 
+			<td><img class="grid" src="01/0.jpg" onclick="myclick(this)"/></td> 
+			
+		</tr>
+		
+	
+	</table>
+</body>

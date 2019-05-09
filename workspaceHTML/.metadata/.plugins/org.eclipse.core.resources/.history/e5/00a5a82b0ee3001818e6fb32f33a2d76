@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Report</title>
+		
+		<style>
+        table, th, td {
+            border: 0px solid #bcbcbc;
+            }
+        table {
+            width: 700px;
+            height: 300px;
+      
+            }
+        </style>
+	</head>
+	<body>
+	<center>
+		<table>
+			<tr>
+				<td rowspan="4" style="background-color: red; color: red">1</td>
+				<td rowspan="3" style="background-color: #FFB85A"></td>
+				<td>3</td>
+				<td>4</td>
+				<td>5</td>
+				<td>6</td>
+				<td>7</td>
+			</tr>
+			
+			<tr>
+				
+				<td>3</td>
+				<td>4</td>
+				<td>5</td>
+				<td>6</td>
+				<td>7</td>
+			</tr>
+			
+			<tr>
+				
+				<td>3</td>
+				<td>4</td>
+				<td>5</td>
+				<td>6</td>
+				<td>7</td>
+			</tr>
+			
+			<tr>
+			
+				<td>2</td>
+				<td>3</td>
+				<td>4</td>
+				<td>5</td>
+				<td>6</td>
+				<td>7</td>
+			</tr>
+			
+		</center>
+		</table>
+	
+	</body>
+</html>

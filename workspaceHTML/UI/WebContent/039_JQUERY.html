@@ -1,0 +1,28 @@
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Document</title>
+        <script src="jquery-1.12.4.js"></script> //인터넷이 안될때 쓴다
+			
+		 <script type="text/javascript">
+		  function myclick() {
+			  //var text1 = document.getElementById("my_text").value
+			  //alert(text1);
+			  
+			  //var txt = $("#my_text").val(); jquery 문법
+			  //alert(txt);
+			  //$("#my_text").val("홍길동");//div에 값을 넣을때 쓰는거
+			  //$("#my_div").html("홍길동1"); //inner html하는 거랑 같다 
+			  
+			  //$("#my_div").html("<strong>홍길동</strong>");
+			  $("#my_div").text("<strong>홍길동1</strong>");
+		}
+		  
+		  </script>
+    </head>
+    <body>
+    	<input id = "my_text" type="text">
+    	<input type = "button" onclick="myclick()" value="클릭">
+    	<div id="my_div"></div>
+    </body>
+</html>

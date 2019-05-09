@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>Document</title>
+		<script type="text/javascript">
+			function myclick() {
+				setInterval(function() {//주기적으로 호출 
+					test();
+				}, 1000); //10^-3()
+	
+			}
+			function test(){
+				console.log("hello");
+			}
+		</script>
+	</head>
+	<body>
+		<a href="javascript:myclick()">클릭</a>
+	</body>
+</html>

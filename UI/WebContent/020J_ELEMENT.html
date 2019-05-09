@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<title>Document</title><!-- document는 body랑 같음 .value이런식으로 하면 메소드
+								같은 변수명을 호출 한다 -->
+        <script src="jquery-1.12.4.js"></script>
+		<script type="text/javascript">
+			function init(){
+                //alert(document.getElementById("myname").value) 
+				alert($("#myname").prop("type"));//property
+			}
+			function myclick(){
+				alert("good job!");
+			} //onload와 같은 개념
+            $(document).ready(function(){
+                init();
+            });
+		</script>
+	</head>
+	<body ><!-- "on" 이벤트.. 메소드랑 같은 개념 -->
+		<form action="http://www.daum.net">
+			이름: <input id="myname" name="myname" type="text" value="홍길동"></br>
+			<input type="button" value="클릭" onclick="myclick()">
+			<input type="submit">
+		</form>
+	</body>
+</html>

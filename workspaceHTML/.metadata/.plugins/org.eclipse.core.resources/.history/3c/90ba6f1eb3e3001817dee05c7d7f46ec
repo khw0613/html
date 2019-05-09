@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Report</title>
+		
+		<style>
+        table, th, td {
+            border: 0px solid #bcbcbc;
+            }
+        table {
+            width: 700px;
+            height: 300px;
+      
+            }
+        </style>
+	</head>
+	<body>
+        <center>
+            <table>
+                <tr>
+                    <td rowspan="4" style="background-color: red; color: red">1</td>
+                    <td rowspan="3" style="background-color: #FF5E00;"></td>
+                    <td rowspan="2" style="background-color: yellow; color: yellow;">3</td>
+                    <td style="background-color: green; color: green">4</td>
+                    <td rowspan="2" style="background-color: blue; color: blue">5</td>
+                    <td rowspan="3" style="background-color: #000087; color: #000087">6</td>
+                    <td rowspan="4" style="background-color: #5C1DB5; color: #5C1DB5">7</td>
+                </tr>
+
+
+            </table>
+        </center>
+	
+	</body>
+</html>

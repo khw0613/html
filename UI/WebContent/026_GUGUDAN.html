@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>Document</title>
+		<script type="text/javascript">
+			function myclick(){ 
+				var gu = document.getElementById("gugu");
+				var dan = gu.options[gu.selectedIndex].value;
+				alert (dan);
+				for(var i = 1; i <=9; i++){
+					document.write(dan+ " * " + i +
+							" = " + i * dan + "<br>");//body안에 입력값을 넣어준다
+						
+			}
+            
+				
+			}
+		</script>
+	</head>
+	<body>
+		<select id = "gugu">
+			<option value="2">2단</option>
+			<option value="3">3단</option>
+			<option value="4">4단</option>
+			<option value="5">5단</option>
+			<option value="6">6단</option>
+			<option value="7">7단</option>
+			<option value="8">8단</option>
+			<option value="9">9단</option>
+		</select>
+		<input type="button" value="클릭" onclick="myclick()"/>
+	</body>
+</html>

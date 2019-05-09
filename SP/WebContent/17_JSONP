@@ -1,0 +1,6 @@
+out.write(callback + "(" + obj.toString() + ")");
+
+dataType : "jsonp",
+
+$.ajax({ url: url, dataType: 'json', data: data, success: callback });
+

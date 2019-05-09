@@ -1,0 +1,110 @@
+<!doctype html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>Untitled Document</title>
+	<script>
+		var currentspeed = 1000; // 타이핑 해야하는 알파벳이니 숫자가 나오는 시간
+		// 타이핑 해야하는 알파벳과 숫자 리스트
+		var letters = new Array("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9");
+
+		var difficulty = new Array("25", "10", "35"); // 난이도
+		var range = new Array("0", "25", "0");
+		var how;
+
+		function writeletters() {
+			if (writearea.innerHTML.substring(0, 1) == "<") {
+				writearea.innerHTML = "";
+			}
+
+			var ranum = Math.round(Math.random() * difficulty[how] - -range[how]);
+
+			if (currentspeed > 50) {
+				currentspeed = currentspeed - 10;
+			}
+
+			if (writearea.innerHTML.length < 15) {
+				writearea.innerHTML = writearea.innerHTML + letters[ranum];
+				setTimeout('writeletters()', currentspeed);
+			} else {
+				endgame();
+			}
+
+		}
+
+		function begingame() {
+			currentspeed = currentspeed;
+			scorearea.innerHTML = "0";
+			how = hardness.options.selectedIndex;
+			writeletters();
+		}
+
+		function keypress(butpush) {
+			if (letters[butpush - 65] == writearea.innerHTML.substring(0, 1)) {
+				writearea.innerHTML = writearea.innerHTML.substring(1, writearea.innerHTML.length);
+				scorearea.innerHTML = scorearea.innerHTML - -1;
+			}
+
+			var numbers2 = new Array("0", "1", "2", "3", "4", "5", "6", "7", "8", "9");
+
+			if (numbers2[butpush - 48] == writearea.innerHTML.substring(0, 1)) {
+				writearea.innerHTML = writearea.innerHTML.substring(1, writearea.innerHTML.length);
+				scorearea.innerHTML = scorearea.innerHTML - -1;
+			}
+
+		}
+
+		var doeeee = 1;
+
+		function showwait() {
+			if (doeeee == 1) {
+				waiting.innerHTML = "_";
+				doeeee = 0;
+			} else {
+				waiting.innerHTML = " ";
+				doeeee = 1;
+			}
+			setTimeout('showwait()', 500);
+		}
+
+		function endgame() {
+			writearea.innerHTML = '<input type="button" value="게임 시작" onclick="begingame();"> ' +
+				'<select id="hardness" size="1">' +
+				'<option>알파벳</option>' +
+				'<option>숫자</option>' +
+				'<option>알파벳과 숫자</option>' +
+				'</select>';
+		}
+
+		function okp_command() {
+			if (event.keyCode > 96 && event.keyCode < 123) {
+				event.keyCode = event.keyCode - 32;
+			}
+
+			keypress(event.keyCode);
+		}
+
+		function ol_command() {
+			focus();
+			showwait();
+			endgame();
+		}
+
+	</script>
+</head>
+
+<body onkeypress="okp_command();" onload="ol_command();">
+
+	<span id="writearea"></span>
+	<span id="waiting"></span>
+
+	<br /> <br />
+
+	점수 : <span id="scorearea">0</span>
+
+
+
+</body>
+
+</html>

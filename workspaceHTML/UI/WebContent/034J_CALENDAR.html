@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<title>Document</title>
+		<script src="jquery-1.12.4.js"></script>
+		<style type="text/css">
+		.td_sun{
+		background-color: red;
+		}
+		.td_sat{
+		background-color: blue;
+		
+		}
+		
+		</style>
+		<script type="text/javascript">
+			function myclick() {
+				
+//				var year1 = document.getElementById("my_year");
+//				var month1 = document.getElementById("my_month");
+//				var year = Number(year1.options[year1.selectedIndex].value);
+//				var month = Number(month1.options[month1.selectedIndex].value); 
+                var year = Number($("#my_year").val());
+                var month = Number($("#my_month").val());
+				
+				var thisMonth_first = new Date(year,month-1,1,0,0,0);
+				var first_week = thisMonth_first.getDay();
+				console.log("first_week:" +first_week);
+				
+				if(month == 12){
+					year++;
+					month = 1;
+				}else{
+					month++;
+				}
+				var nextMonth_first = new Date(year,month-1,1,0,0,0);
+				var between = (nextMonth_first.getTime() 
+						- thisMonth_first.getTime())/(1000*60*60*24);
+				//1970년 표준시부터 다음달 까지랑 현재달 까지를 빼면 한달분을 mile를 가지고 온다
+				//(초*분*시*일)
+				console.log("between:" +between);
+				
+				
+				//var arr_td = document.getElementsByClassName("td_day");
+				
+				var arr_disp = new Array();
+				
+				for(var i = 0; i < first_week; i++){
+					arr_disp.push("&nbsp;");
+				}
+				
+				for(var i = 0; i < between; i++){
+					arr_disp.push(i+1+"");
+				}
+				
+				var cnt = arr_disp.length;
+				
+				var cnt_add = (7 - (cnt%7))%7; //요일을 다 넣고 남은 나머지 개수를 
+												// 구하는데 7일 경우 0이되야되기 때문에 다시 7로 나눔
+				
+				for(var i = 0; i < cnt_add; i++){
+					arr_disp.push("&nbsp;");
+				}
+				var text = "";
+				for(var i = 0; i < arr_disp.length; i=i+7){
+					text += "<tr>";
+					text += "<td class='td_sun'>"+ arr_disp[i+0] +"</td>";
+					text += "<td class='td_day'>"+ arr_disp[i+1] +"</td>";
+					text += "<td class='td_day'>"+ arr_disp[i+2] +"</td>";
+					text += "<td class='td_day'>"+ arr_disp[i+3] +"</td>";
+					
+					text += "<td class='td_day'>"+ arr_disp[i+4] +"</td>";
+					text += "<td class='td_day'>"+ arr_disp[i+5] +"</td>";
+					text += "<td class='td_sat'>"+ arr_disp[i+6] +"</td>";
+					text += "</tr>";
+					
+				}
+				
+				//var obj_tbody = document.getElementById("my_tbody");
+                //obj_tbody.innerHTML = text;
+                $("#my_tbody").html(text);
+			}
+            $(document).ready(function(){
+                $("#my_year").on("change",function(){
+                    myclick();
+                  });
+            $("#my_month").on("change",function(){
+                    myclick();
+                  });
+            });
+		</script>
+	</head>
+	<body onload="myclick()">
+		<table border="1">
+			<thead>		
+				<tr>
+					<tr>
+					<td colspan="7">
+						<select id="my_year" >
+							<option value="2019">2019년</option>
+							<option value="2018">2018년</option>
+							<option value="2017">2017년</option>
+						</select>
+						<select id="my_month" >
+							<option value="1">1월</option>
+							<option value="2">2월</option>
+							<option value="3">3월</option>
+							<option value="4">4월</option>
+							<option value="5">5월</option>
+							
+							<option value="6">6월</option>
+							<option value="7">7월</option>
+							<option value="8">8월</option>
+							<option value="9">9월</option>
+							<option value="10">10월</option>
+							
+							<option value="11">11월</option>
+							<option value="12">12월</option>
+						</select>
+					</td>
+				</tr>
+				
+					<td>Sun</td>
+					<td>Mon</td>
+					<td>Tue</td>
+					<td>Wed</td>
+					<td>Thu</td>
+					<td>Fri</td>
+					<td>Sat</td>
+				</tr>
+			</thead>
+			<tbody id="my_tbody"> <!-- 테이블 묶을때 -->
+				<tr>
+					<td class='td_sun'>&nbsp;</td>
+					<td class='td_day'>&nbsp;</td>
+					<td class='td_day'>&nbsp;</td>
+					<td class='td_day'>&nbsp;</td>
+					<td class='td_day'>&nbsp;</td>
+					<td class='td_day'>&nbsp;</td>
+					<td class='td_sat'>&nbsp;</td>
+				</tr>
+			</tbody>
+		</table>
+			<a href="javascript:myclick()">클릭</a>
+	</body>
+</html>

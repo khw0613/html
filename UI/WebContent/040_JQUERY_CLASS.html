@@ -1,0 +1,28 @@
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Document</title>
+        <script src="jquery-1.12.4.js"></script> <!-- 인터넷이 안될때 쓴다  -->
+			
+		 <script type="text/javascript">
+		  function myclick() {
+			var txt = $(".my_text").val();
+// 			alert(txt);
+//  		$(".my_text").val("홍길동");
+ 			$(".mydiv:eq(1)").html("홍길동");//eq 몇 번 째 요소인지 index값을 돌려주기도,
+ 											//아니면 지정한 순번의 요소를 우리의 입맛대로 바꿔주는  메소드
+ 			$(".mydiv:lt(1)").html("홍길동"); //lt 인자로 전달된 index 보다 작은 index를 가진 요소를 모두 가져온다.
+
+		}
+		  
+		  </script>
+    </head>
+    <body>
+    	<input class = "my_text" type="text">
+    	<input type="button" onclick="myclick()" value="click">
+    	
+    	<div class="mydiv">6</div>
+    	<div class="mydiv">7</div>
+    	<div class="mydiv">8</div>
+    </body>
+</html>

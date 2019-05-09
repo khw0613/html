@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script src="jquery-1.12.4.js"></script>
+<script type="text/javascript">
+function myDupl(){
+	var p_get_id = $("input[name=co_id]").val();
+	
+	   $.ajax({
+	       type : "get",
+	       url : "myserveltdupl",
+	       data : {
+	          p_id : p_get_id
+	       },
+	       dataType : "json",
+
+	       success : function(data) {
+	    	   
+	    	   
+	    	if(p_get_id==""){
+	    		alert("값을 입력해줘");
+	    		return;
+	    	}
+			if(data.checked > 0){
+				alert("이미 존재함");
+			}else{
+				alert("사용가능");
+			}
+	          
+	       },
+
+	       error : function(xhr, status, error) {
+	          console.log("에러!: " + error);
+
+	       },
+
+	    });
+	
+}
+function myAddr(){
+	window.open("popup.html", "popup01", "width=500, height=360");
+}
+
+function my_click(){
+	alert("가입 완료");
+}
+
+</script>
+</head>
+<body>
+<form name="frm" action="">
+
+<table>
+	<tr>
+		<td>아이디</td>
+		<td><input type="text" name="co_id"> </td>
+		<td><input type="button" value="중복 체크" onclick="myDupl()"> </td>
+		
+	</tr>
+	<tr>
+		<td>이름</td>
+		<td><input type="text" name="co_name"> </td>
+		<td>&nbsp; </td>
+		
+	</tr>
+	<tr>
+		<td>패스워드</td>
+		<td><input type="password" name="pwd"> </td>
+		<td>&nbsp; </td>
+		
+	</tr>
+	<tr>
+		<td>우편번호</td>
+		<td><input type="text" name="zipcode"> </td>
+		<td><input type="button" value="번호 검색" onclick="myAddr()"/></td>
+		
+	</tr>
+	<tr>
+		<td>주소</td>
+		<td><input type="text" name="addr1"> </td>
+		<td>&nbsp; </td>
+		
+	</tr>
+	<tr>
+		<td>상세주소</td>
+		<td><input type="text" name="addr2"> </td>
+		<td>&nbsp; </td>
+		
+	</tr>
+	
+
+</table>
+</form>
+	<input type="button" value="가입" onclick="my_click()"/>
+
+</body>
+</html>

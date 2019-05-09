@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap
+			PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+			"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<!-- namespace속성 : 아래에서 작성한 SQL을 호출할 때 같이 사용된다. -->			
+<sqlMap namespace="omok">
+	
+	 
+	 <!-- update 연습 (parameterClass에 alias를 지정할 수 있다.) -->
+	 <insert id="insert" parameterClass="omokVO">
+	 		insert into omok (pan, pan_order, history, winner)
+	 		values ( #pan#, #pan_order#, #history#, #winner# )
+	 </insert>
+	 
+	
+	 <!-- select 연습 -->
+	 <select id="selectlist" resultClass="omokVO">
+	 		select pan, pan_order, history, winner from omok
+	 </select>
+
+
+</sqlMap>			
+
+
+
+
+
